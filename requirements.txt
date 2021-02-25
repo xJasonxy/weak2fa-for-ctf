@@ -1,5 +1,6 @@
 Flask
 WTForms
+email-validator
 SQLAlchemy
 bcrypt
 requests

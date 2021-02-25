@@ -3,11 +3,11 @@ function message(status, shake=false, id="") {
     $("#"+id).effect("shake", {direction: "right", times: 2, distance: 8}, 250);
   } 
   document.getElementById("feedback").innerHTML = status;
-  $("#feedback").show().delay(2000).fadeOut();
+  $("#feedback").show().delay(5000).fadeOut();
 }
 
 function error(type) {
-  $("."+type).css("border-color", "#E14448");
+  $("."+type).css("border-color", "#e14448");
 }
 
 var login = function() {
@@ -15,11 +15,12 @@ var login = function() {
     type: "POST",
     url: "/",
     data: {"username": $("#login-user").val(), 
-           "password": $("#login-pass").val()},
+           "password": $("#login-pass").val(),
+           "otp"     : $("#login-otp").val()},
     success(response){
       var status = JSON.parse(response)["status"];
       if (status === "Login successful") { location.reload(); }
-      else { error("login-input"); }
+      else { message(status, true, "top-login"); }
     }
   });
 };

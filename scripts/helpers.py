@@ -54,11 +54,12 @@ def hash_password(password):
     return bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
 
 
-def credentials_valid(username, password):
+def credentials_valid(username, password, otp):
     with session_scope() as s:
         user = s.query(tabledef.User).filter(tabledef.User.username.in_([username])).first()
         if user:
-            return bcrypt.checkpw(password.encode('utf8'), user.password.encode('utf8'))
+            if bcrypt.checkpw(password.encode('utf8'), user.password.encode('utf8')):
+                return user.get_otp() == otp
         else:
             return False
 

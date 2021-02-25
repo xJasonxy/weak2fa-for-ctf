@@ -11,6 +11,7 @@ import os
 app = Flask(__name__)
 app.secret_key = os.urandom(12)  # Generic key for dev purposes only
 
+ctf_token = "CHANGE-ME!"
 # Heroku
 #from flask_heroku import Heroku
 #heroku = Heroku(app)
@@ -24,16 +25,17 @@ def login():
         if request.method == 'POST':
             username = request.form['username'].lower()
             password = request.form['password']
+            otp = request.form['otp']
             if form.validate():
-                if helpers.credentials_valid(username, password):
+                if helpers.credentials_valid(username, password, otp):
                     session['logged_in'] = True
                     session['username'] = username
                     return json.dumps({'status': 'Login successful'})
-                return json.dumps({'status': 'Invalid user/pass'})
-            return json.dumps({'status': 'Both fields required'})
+                return json.dumps({'status': 'Invalid user/pass or wrong OTP'})
+            return json.dumps({'status': 'All fields required'})
         return render_template('login.html', form=form)
     user = helpers.get_user()
-    return render_template('home.html', user=user)
+    return render_template('home.html', user=user, token=ctf_token)
 
 
 @app.route("/logout")
@@ -46,7 +48,7 @@ def logout():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if not session.get('logged_in'):
-        form = forms.LoginForm(request.form)
+        form = forms.SignupForm(request.form)
         if request.method == 'POST':
             username = request.form['username'].lower()
             password = helpers.hash_password(request.form['password'])
@@ -58,7 +60,7 @@ def signup():
                     session['username'] = username
                     return json.dumps({'status': 'Signup successful'})
                 return json.dumps({'status': 'Username taken'})
-            return json.dumps({'status': 'User/Pass required'})
+            return json.dumps({'status': 'Valid email required'})
         return render_template('login.html', form=form)
     return redirect(url_for('login'))
 

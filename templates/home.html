@@ -2,7 +2,16 @@
 {% block body %}
 {% include "navbar.html" %}
 <section class="hero is-primary is-bold is-large">
-  <div class="hero-body"></div>
+  <div class="hero-body">
+      <h1 class="title">Welcome {{  user.username }}</h1><hr />
+      {% if user.id > 1 %}
+          <h3 class="subtitle">You are not an admin.</h3>
+          <span>Hint: You can't change your account permissions!</span>
+      {% else %}
+          <h3 class="subtitle">You are logged in as an admin!</h3>
+          Take this token: <code>{{ token }}</code>
+      {% endif %}
+  </div>
 </section>
 {% endblock %}
 {% block scripts %}

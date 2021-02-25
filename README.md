@@ -11,6 +11,8 @@
 
 ## CTF-Features
 - Bad implementation of mail-based 2FA
+- Only the default account (admin:admin) is admin, no way to elevate privileges
+- Target is to login as first account by bypassing 2FA
 
 ## Setup
 ``` 
